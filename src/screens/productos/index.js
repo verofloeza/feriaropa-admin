@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Card from "@mui/material/Card";
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout'
@@ -8,10 +8,28 @@ import DataTable from "examples/Tables/DataTable";
 import Grid from "@mui/material/Grid";
 import MDBox from 'components/MDBox'
 import MDTypography from 'components/MDTypography'
+import { auth } from 'contants/Firebase';
+import { useNavigate } from 'react-router-dom';
 
 const Productos = () => {
+    const history = useNavigate()
     const [ render, setRender ] = useState(true);
     const { columns, rows } = DataProducts(render, setRender);
+
+    useEffect(()=>{
+      const checkFirebaseAuth = () => {
+        const unsubscribe = auth.onAuthStateChanged( async(user) => {
+  
+            if (!user) {
+                history(`./authentication/sign-in`);
+            }
+        });
+        
+        return () => unsubscribe();
+        };
+        
+        checkFirebaseAuth();
+    },[])
     
   return (
     <DashboardLayout>

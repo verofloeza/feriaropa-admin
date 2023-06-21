@@ -45,8 +45,8 @@ const colors = {
   },
 
   primary: {
-    main: "#e91e63",
-    focus: "#e91e63",
+    main: "#f7efa2",
+    focus: "#f1e940",
   },
 
   secondary: {
@@ -55,8 +55,8 @@ const colors = {
   },
 
   info: {
-    main: "#1A73E8",
-    focus: "#1662C4",
+    main: "#9263A1",
+    focus: "#9263A1",
   },
 
   success: {
@@ -80,8 +80,8 @@ const colors = {
   },
 
   dark: {
-    main: "#344767",
-    focus: "#2c3c58",
+    main: "#51067b",
+    focus: "#51067b",
   },
 
   grey: {
@@ -98,18 +98,18 @@ const colors = {
 
   gradients: {
     primary: {
-      main: "#EC407A",
-      state: "#D81B60",
+      main: "#f7f386",
+      state: "#f1e940",
     },
 
     secondary: {
-      main: "#747b8a",
-      state: "#495361",
+      main: "#f7f386",
+      state: "#8f93a9",
     },
 
     info: {
-      main: "#49a3f1",
-      state: "#1A73E8",
+      main: "#9263A1",
+      state: "#9263A1 ",
     },
 
     success: {
@@ -133,8 +133,8 @@ const colors = {
     },
 
     dark: {
-      main: "#42424a",
-      state: "#191919",
+      main: "#51067b",
+      state: "#51067b",
     },
   },
 
@@ -245,7 +245,7 @@ const colors = {
   coloredShadows: {
     primary: "#e91e62",
     secondary: "#110e0e",
-    info: "#00bbd4",
+    info: "#51067b",
     success: "#4caf4f",
     warning: "#ff9900",
     error: "#f44336",

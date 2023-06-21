@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { addDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from 'contants/Firebase';
 
 import Card from "@mui/material/Card";
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout'
@@ -13,9 +14,8 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography'
 import Modal from "@mui/material/Modal";
-import { auth } from 'contants/Firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { db } from 'contants/Firebase';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -32,12 +32,28 @@ const style = {
 };
 
 const Administradores = () => {
+    const history = useNavigate();
     const [open, setOpen] = useState(false);
     const [openNew, setOpenNew] = useState(false);
     const [ render, setRender ] = useState(true);
     const [ email, setEmail ] = useState(null);
     const [ name, setName ] = useState(null);
     const [ pass, setPass ] = useState(null);
+
+    useEffect(()=>{
+      const checkFirebaseAuth = () => {
+        const unsubscribe = auth.onAuthStateChanged( async(user) => {
+  
+            if (!user) {
+                history(`./authentication/sign-in`);
+            }
+        });
+        
+        return () => unsubscribe();
+        };
+        
+        checkFirebaseAuth();
+    },[])
     
     const handleOpen = async (email) => {
       setEmail(email);

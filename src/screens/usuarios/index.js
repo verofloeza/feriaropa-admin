@@ -12,9 +12,12 @@ import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import { auth } from 'contants/Firebase';
 import breakpoints from 'assets/theme/base/breakpoints';
+import { useNavigate } from 'react-router-dom';
 
 const Usuarios = () => {
+    const history = useNavigate(); 
     const [ render, setRender ] = useState(true);
     const [ busqueda, setBusqueda ] = useState(null);
     const [tabsOrientation, setTabsOrientation] = useState("horizontal");
@@ -39,6 +42,21 @@ const Usuarios = () => {
       // Remove event listener on cleanup
       return () => window.removeEventListener("resize", handleTabsOrientation);
     }, [tabsOrientation]);
+
+    useEffect(()=>{
+      const checkFirebaseAuth = () => {
+        const unsubscribe = auth.onAuthStateChanged( async(user) => {
+  
+            if (!user) {
+                history(`./authentication/sign-in`);
+            }
+        });
+        
+        return () => unsubscribe();
+        };
+        
+        checkFirebaseAuth();
+    },[])
   
     const handleSetTabValue = (event, newValue) => {
       setTabValue(newValue);

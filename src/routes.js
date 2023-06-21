@@ -1,13 +1,10 @@
 import Administradores from "screens/administradores";
-import Billing from "layouts/billing";
+import Basic from "screens/autenticacion";
 import Categorias from "screens/categorias";
 import Dashboard from "layouts/dashboard";
 import Icon from "@mui/material/Icon";
-import Notifications from "layouts/notifications";
+import Logout from "screens/autenticacion/Logout";
 import Productos from "screens/productos";
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
-import Tables from "layouts/tables";
 import Usuarios from "screens/usuarios";
 
 const routes = [
@@ -53,12 +50,12 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Sign In",
-    key: "sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
-  }, 
+    name: "Sign Out",
+    key: "sign-out",
+    icon: <Icon fontSize="small">logout</Icon>,
+    route: "/logout",
+    component: <Logout />,
+  }
 ];
 
 export default routes;

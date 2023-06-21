@@ -13,13 +13,15 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { setMiniSidenav, useMaterialUIController } from "context";
 import { useEffect, useState } from "react";
 
+import Basic from "screens/autenticacion";
 import CssBaseline from "@mui/material/CssBaseline";
 import Sidenav from "examples/Sidenav";
 import { ThemeProvider } from "@mui/material/styles";
+import { auth } from "contants/Firebase";
 import brandDark from "assets/images/logo-ct-dark.png";
 import brandWhite from "assets/images/logo-ct.png";
 import routes from "routes";
@@ -27,6 +29,7 @@ import theme from "assets/theme";
 import themeDark from "assets/theme-dark";
 
 export default function App() {
+  const history = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -41,6 +44,24 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
 
+
+  useEffect(()=>{
+    const checkFirebaseAuth = () => {
+      const unsubscribe = auth.onAuthStateChanged( async(user) => {
+
+          if (!user) {
+              history(`./authentication/sign-in`);
+          }else{
+            history(`./dashboard`);
+            
+          }
+      });
+      
+      return () => unsubscribe();
+      };
+      
+      checkFirebaseAuth();
+  },[])
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -93,7 +114,8 @@ export default function App() {
       )}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path={'/authentication/sign-in'} element={<Basic />} />
+        <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
       </Routes>
     </ThemeProvider>
   );

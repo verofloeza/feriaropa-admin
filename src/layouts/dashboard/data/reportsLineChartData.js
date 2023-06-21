@@ -31,7 +31,6 @@ const getPastYearMonths = (numMonths) => {
     const monthName = monthDate.toLocaleDateString('es-ES', { month: 'short' });
     months.unshift(monthName);
   }
-  console.log(months)
   return months;
 };
 

@@ -1,5 +1,5 @@
 import { Icon, Modal } from "@mui/material";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 
 import Card from "@mui/material/Card";
@@ -12,7 +12,9 @@ import MDBox from 'components/MDBox'
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import MDTypography from 'components/MDTypography'
+import { auth } from "contants/Firebase";
 import { db } from "contants/Firebase";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: 'absolute',
@@ -29,11 +31,27 @@ const style = {
 };
 
 const Categorias = () => {
+  const history = useNavigate()
   const [open, setOpen] = useState(false);
   const [openNew, setOpenNew] = useState(false);
   const [ render, setRender ] = useState(true);
   const [ id, setId ] = useState(null);
   const [ category, setCategory ] = useState(null);
+
+  useEffect(()=>{
+    const checkFirebaseAuth = () => {
+      const unsubscribe = auth.onAuthStateChanged( async(user) => {
+
+          if (!user) {
+              history(`./authentication/sign-in`);
+          }
+      });
+      
+      return () => unsubscribe();
+      };
+      
+      checkFirebaseAuth();
+  },[])
   
   const handleOpen = async (id, category) => {
     setId(id)
@@ -117,10 +135,10 @@ const Categorias = () => {
                 <MDTypography variant="h6" color="white">
                   Categorias
                 </MDTypography>
-                <MDButton variant="gradient" color="dark" style={{float: 'right', marginTop: -30}} onClick={()=> handleOpenNew()}>
+                {/* <MDButton variant="gradient" color="dark" style={{float: 'right', marginTop: -30}} onClick={()=> handleOpenNew()}>
                   <Icon sx={{ fontWeight: "bold" }}>add</Icon>
                   &nbsp;agregar
-                </MDButton>
+                </MDButton> */}
               </MDBox>
               <MDBox pt={3}>
                 <DataTable
