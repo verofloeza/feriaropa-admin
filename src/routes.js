@@ -2,6 +2,7 @@ import Administradores from "screens/administradores";
 import Basic from "screens/autenticacion";
 import Categorias from "screens/categorias";
 import Dashboard from "layouts/dashboard";
+import Envios from "screens/envios";
 import Icon from "@mui/material/Icon";
 import Logout from "screens/autenticacion/Logout";
 import Productos from "screens/productos";
@@ -47,6 +48,14 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/categorias",
     component: <Categorias />,
+  },
+  {
+    type: "collapse",
+    name: "Tabla de envios",
+    key: "envios",
+    icon: <Icon fontSize="small">local_shipping</Icon>,
+    route: "/envios",
+    component: <Envios />,
   },
   {
     type: "collapse",
