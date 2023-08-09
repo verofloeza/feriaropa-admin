@@ -1,5 +1,6 @@
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { addDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from 'contants/Firebase';
 
 import Card from "@mui/material/Card";
@@ -9,6 +10,7 @@ import Data from "./data/Data";
 import DataTable from "examples/Tables/DataTable";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
+import MDBadge from 'components/MDBadge';
 import MDBox from 'components/MDBox'
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
@@ -39,6 +41,7 @@ const Administradores = () => {
     const [ email, setEmail ] = useState(null);
     const [ name, setName ] = useState(null);
     const [ pass, setPass ] = useState(null);
+    const [ rows, setRows ] = useState(null);
 
     useEffect(()=>{
       const checkFirebaseAuth = () => {
@@ -137,9 +140,55 @@ const Administradores = () => {
     }
 
 
+    useEffect(()=>{
+      const usersList = async () =>{
+        const list = [];
+        const querySnapshot = await getDocs(query(collection(db, "users"), where("role", "==", "admin")));
+        querySnapshot.forEach((doc) => {
+          let info = doc.data();
+          list.push({
+              id: doc.id,
+              name: info.name,
+              email: info.email,
+              image: info.image,
+              active: info.active
+            });
+          
+        });
+        setRows(list)
+        setRender(false)
+        }
+      usersList()
+    }, [render])
 
-    const { columns, rows } = Data(handleOpen, render, setRender);
+    const updateStatus = async (email, status) =>{
+      const userRef = doc(db, "users", email);
+      const user = {
+        active: status
+      };
+      try {
+        await updateDoc(userRef, user);
+        setRender(true)
+      } catch (e) {
+        console.error("Error al editar el usuario a Firestore:", e);
+      }
+    }
 
+    // Opciones de paginación
+    const rowsPerPageOptions = [10, 20, 30];
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
+  
+    // Función para cambiar de página
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
+  
+    // Función para cambiar el número de filas por página
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
     
    
   return (
@@ -168,13 +217,69 @@ const Administradores = () => {
                 </MDButton>
               </MDBox>
               <MDBox pt={3}>
-                <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
+              {
+                        rows ?
+                        <div>
+                          <TableContainer component={Paper}>
+                            <Table>
+                              
+                              <TableBody>
+                                <TableRow>
+                                  <TableCell>Nombre</TableCell>
+                                  <TableCell>Email</TableCell>
+                                  <TableCell>Estado</TableCell>
+                                  <TableCell>Accion</TableCell>
+                                </TableRow>
+                                {
+                                 
+                                  rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                                  <TableRow key={row.id}>
+                                    <TableCell>
+                                    <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+                                        {row.name}
+                                      </MDTypography>
+                                      </TableCell>
+                                    <TableCell>
+                                    <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+                                        {row.email}
+                                      </MDTypography>
+                                      </TableCell>
+                                      
+                                      <TableCell>
+                                     { row.active === true
+                                                ? <MDBox ml={-1}>
+                                                      <MDBadge badgeContent="activo" color="success" variant="gradient" size="sm" onClick={()=>updateStatus(row.id, false)} style={{cursor: 'pointer'}} />
+                                                    </MDBox>
+                                                  : <MDBox ml={-1}>
+                                                      <MDBadge badgeContent="innactivo" color="danger" variant="gradient" size="sm" onClick={()=>updateStatus(row.id, true)} style={{cursor: 'pointer'}} />
+                                                    </MDBox>
+                                                    }
+                                      </TableCell>
+                                      <TableCell>
+                                      <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => handleOpen(row.email)}>
+                                        <Icon>edit</Icon>&nbsp;Editar
+                                      </MDTypography>
+                                      </TableCell>
+                                  </TableRow>
+                                ))
+                                
+                              }
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                          <TablePagination
+                            rowsPerPageOptions={rowsPerPageOptions}
+                            component="div"
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                          />
+                        </div>
+                        : <MDBox ml={-1}></MDBox>
+                      
+                      }
               </MDBox>
             </Card>
           </Grid>
