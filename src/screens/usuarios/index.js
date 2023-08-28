@@ -380,7 +380,7 @@ const Usuarios = () => {
                   Nombre y Apellido: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.fullName}
+                  {datos.fullname}
                 </MDTypography>
               </MDBox>
               <MDBox>
