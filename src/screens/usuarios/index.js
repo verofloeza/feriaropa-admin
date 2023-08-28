@@ -81,7 +81,7 @@ const Usuarios = () => {
                 email: info.email,
                 image: info.image,
                 active: info.active,
-                name: info.fullName,
+                name: info.fullName !== null ? info.fullName : '' ,
                 token: info.token,
                 alias: info.alias,
                 date: formattedDate
@@ -105,7 +105,7 @@ const Usuarios = () => {
                   email: info.email,
                   image: info.image,
                   active: info.active,
-                  name: info.fullName,
+                  name: info.fullName !== null ? info.fullName : '',
                   token: info.token,
                   alias: info.alias,
                   date: formattedDate
@@ -121,7 +121,7 @@ const Usuarios = () => {
                     email: info.email,
                     image: info.image,
                     active: info.active,
-                    name: info.fullName,
+                    name: info.fullName !== null ? info.fullName : '',
                     token: info.token,
                     alias: info.alias,
                     date: formattedDate
@@ -139,7 +139,7 @@ const Usuarios = () => {
                     email: info.email,
                     image: info.image,
                     active: info.active,
-                    name: info.fullName,
+                    name: info.fullName !== null ? info.fullName : '',
                     token: info.token,
                     alias: info.alias,
                     date: formattedDate
@@ -379,7 +379,7 @@ const Usuarios = () => {
                   Nombre y Apellido: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.fullName}
+                {datos && datos.fullName !== null ? datos.fullName : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -387,7 +387,7 @@ const Usuarios = () => {
                   Usuario:
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.nickname}
+                  {datos && datos.nickname !== null ? datos.nickname : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -395,7 +395,7 @@ const Usuarios = () => {
                   Dirección: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                 {datos.address}
+                 {datos && datos.address !== null ? datos.address : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -403,7 +403,7 @@ const Usuarios = () => {
                   Documento: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.documento}
+                  {datos && datos.documento !== null ? datos.documento : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -411,7 +411,7 @@ const Usuarios = () => {
                   Email: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.email}
+                  {datos && datos.email !== null ? datos.email : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -419,7 +419,7 @@ const Usuarios = () => {
                   Teléfono: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.telefono}
+                  {datos && datos.telefono !== null ? datos.telefono : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -427,7 +427,7 @@ const Usuarios = () => {
                   Teléfono Adicional: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.telefonoD}
+                  {datos && datos.telefonoD !== null ? datos.telefonoD : ''}
                 </MDTypography>
               </MDBox>
               <MDBox>
@@ -435,7 +435,7 @@ const Usuarios = () => {
                   Medios de Pago de Preferencia: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.favoritePayment}
+                  {datos && datos.favoritePayment !== null ? datos.favoritePayment : ''}
                 </MDTypography>
               </MDBox>
               
