@@ -246,7 +246,6 @@ const Usuarios = () => {
        try {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log(docSnap.data())
           setDatos(docSnap.data());
         } else {
           console.log('No such document!');
@@ -380,7 +379,7 @@ const Usuarios = () => {
                   Nombre y Apellido: 
                 </MDTypography>
                 <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
-                  {datos.fullname}
+                  {datos.fullName}
                 </MDTypography>
               </MDBox>
               <MDBox>
