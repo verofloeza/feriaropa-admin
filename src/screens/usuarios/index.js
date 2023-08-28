@@ -1,6 +1,6 @@
-import { Icon, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Icon, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 
 import AppBar from "@mui/material/AppBar";
 import Card from "@mui/material/Card";
@@ -10,8 +10,10 @@ import Grid from "@mui/material/Grid";
 import MDAvatar from 'components/MDAvatar';
 import MDBadge from 'components/MDBadge';
 import MDBox from 'components/MDBox'
+import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
+import PropTypes from 'prop-types';
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import { auth } from 'contants/Firebase';
@@ -35,6 +37,20 @@ Author.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+
 const Usuarios = () => {
     const history = useNavigate(); 
     const [ render, setRender ] = useState(true);
@@ -42,6 +58,8 @@ const Usuarios = () => {
     const [tabsOrientation, setTabsOrientation] = useState("horizontal");
     const [tabValue, setTabValue] = useState(0);
     const [ rows, setRows ] = useState(null);
+    const [ open, setOpen ] = useState(false);
+    const [ datos, setDatos ] = useState(null);
   
     useEffect(()=>{
       const usersList = async () =>{
@@ -197,13 +215,7 @@ const Usuarios = () => {
       setBusqueda(buscar)
       setRender(true)
     }
-    
-    const handleChange = (event) => {
-      setFiltro(event.target.value);
-      console.log(filtro)
-    };
-  
-    // const { columns, rows } = DataUser(render, setRender, busqueda, tabValue);
+
 
     // Opciones de paginación
     const rowsPerPageOptions = [10, 20, 30];
@@ -220,6 +232,29 @@ const Usuarios = () => {
       setRowsPerPage(parseInt(event.target.value, 10));
       setPage(0);
     };
+
+    const handleOpen = async (id) => {
+      obtenerDatos(id)
+      setOpen(true);
+    };
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const obtenerDatos = async (email) => {
+       const docRef = doc(db, "users", email);
+       try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          console.log(docSnap.data())
+          setDatos(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error getting document:', error);
+      }
+    }
     
   return (
     <DashboardLayout>
@@ -259,15 +294,7 @@ const Usuarios = () => {
               
               
               <MDBox pt={3}>
-                {/* <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                /> */}
-
-{
+                {
                         rows ?
                         <div>
                           <TableContainer component={Paper}>
@@ -310,7 +337,7 @@ const Usuarios = () => {
                                       </TableCell>
                                       <TableCell>
                                       <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => handleOpen(row.email)}>
-                                        <Icon>edit</Icon>&nbsp;Editar
+                                        <Icon sx={{ fontSize: 30 }}>remove_red_eye</Icon>&nbsp;Ver
                                       </MDTypography>
                                       </TableCell>
                                   </TableRow>
@@ -338,6 +365,92 @@ const Usuarios = () => {
           </Grid>
         </Grid>
       </MDBox>  
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <MDBox sx={{ ...style }}>
+          <h2 id="child-modal-title">Ver Usuario</h2>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox component="form" role="form">
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Nombre y Apellido: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.fullName}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Usuario:
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.nickname}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Dirección: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                 {datos.address}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Documento: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.documento}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Email: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.email}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Teléfono: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.telefono}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Teléfono Adicional: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.telefonoD}
+                </MDTypography>
+              </MDBox>
+              <MDBox>
+                <MDTypography component="a" href="#" variant="caption" color="dark" fontWeight="bold">
+                  Medios de Pago de Preferencia: 
+                </MDTypography>
+                <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" style={{marginLeft: 10}}>
+                  {datos.favoritePayment}
+                </MDTypography>
+              </MDBox>
+              
+              <MDBox mt={4} mb={1}>
+                <MDButton variant="outlined" color="secondary" size="small" onClick={handleClose} style={{left:5}}>
+                  Cerrar
+                </MDButton>
+              </MDBox>
+              
+            </MDBox>
+          </MDBox>
+          
+        </MDBox>
+      </Modal>
     </DashboardLayout>
   )
 }
