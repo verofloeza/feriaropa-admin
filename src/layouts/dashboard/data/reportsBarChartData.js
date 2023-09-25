@@ -45,7 +45,7 @@ const sales = async () => {
   const endOfDay = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), fechaActual.getDate());
 
   const ordersSnapshot = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDay), where("date", "<", endOfDay))
+    query(collection(db, "orders"), where("date", ">=", startOfDay.toString()), where("date", "<", endOfDay.toString()))
   );
 
   const fechaTwoDias = new Date(fechaAnterior.getFullYear(), fechaAnterior.getMonth(), fechaAnterior.getDate() - 1);
@@ -53,7 +53,7 @@ const sales = async () => {
   const endOfDayTwo = new Date(fechaAnterior.getFullYear(), fechaAnterior.getMonth(), fechaAnterior.getDate());
 
   const ordersSnapshotTwo = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDayTwo), where("date", "<", endOfDayTwo))
+    query(collection(db, "orders"), where("date", ">=", startOfDayTwo.toString()), where("date", "<", endOfDayTwo.toString()))
   );
 
   const fechaThreeDias = new Date(fechaTwoDias.getFullYear(), fechaTwoDias.getMonth(), fechaTwoDias.getDate() - 1);
@@ -61,7 +61,7 @@ const sales = async () => {
   const endOfDayThree = new Date(fechaTwoDias.getFullYear(), fechaTwoDias.getMonth(), fechaTwoDias.getDate());
 
   const ordersSnapshothree = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDayThree), where("date", "<", endOfDayThree))
+    query(collection(db, "orders"), where("date", ">=", startOfDayThree.toString()), where("date", "<", endOfDayThree.toString()))
   );
 
   const fechaFourDias = new Date(fechaThreeDias.getFullYear(), fechaThreeDias.getMonth(), fechaThreeDias.getDate() - 1);
@@ -69,7 +69,7 @@ const sales = async () => {
   const endOfDayFour = new Date(fechaFourDias.getFullYear(), fechaFourDias.getMonth(), fechaFourDias.getDate());
 
   const ordersSnapshoFour = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDayFour), where("date", "<", endOfDayFour))
+    query(collection(db, "orders"), where("date", ">=", startOfDayFour.toString()), where("date", "<", endOfDayFour.toString()))
   );
 
   const fechaFiveDias = new Date(fechaFourDias.getFullYear(), fechaFourDias.getMonth(), fechaFourDias.getDate() - 1);
@@ -77,7 +77,7 @@ const sales = async () => {
   const endOfDayFive = new Date(fechaFiveDias.getFullYear(), fechaFiveDias.getMonth(), fechaFiveDias.getDate());
 
   const ordersSnapshoFive = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDayFive), where("date", "<", endOfDayFive))
+    query(collection(db, "orders"), where("date", ">=", startOfDayFive.toString()), where("date", "<", endOfDayFive.toString()))
   );
 
   const fechaSixDias = new Date(fechaFiveDias.getFullYear(), fechaFiveDias.getMonth(), fechaFiveDias.getDate() - 1);
@@ -85,7 +85,7 @@ const sales = async () => {
   const endOfDaySix = new Date(fechaSixDias.getFullYear(), fechaSixDias.getMonth(), fechaSixDias.getDate());
 
   const ordersSnapshoSix = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDaySix), where("date", "<", endOfDaySix))
+    query(collection(db, "orders"), where("date", ">=", startOfDaySix.toString()), where("date", "<", endOfDaySix.toString()))
   );
 
   const fechaSevenDias = new Date(fechaSixDias.getFullYear(), fechaSixDias.getMonth(), fechaSixDias.getDate() - 1);
@@ -93,13 +93,13 @@ const sales = async () => {
   const endOfDaySeven = new Date(fechaSevenDias.getFullYear(), fechaSevenDias.getMonth(), fechaSevenDias.getDate());
 
   const ordersSnapshoSeven = await getDocs(
-    query(collection(db, "orders"), where("date", ">=", startOfDaySeven), where("date", "<", endOfDaySeven))
+    query(collection(db, "orders"), where("date", ">=", startOfDaySeven.toString()), where("date", "<", endOfDaySeven.toString()))
   );
-
+  
   return [ordersSnapshoSeven.size, ordersSnapshoSix.size, ordersSnapshoFive.size, ordersSnapshoFour.size, ordersSnapshothree.size, ordersSnapshotTwo.size, ordersSnapshot.size];
 };
 
 export default {
   labels: daysWeek(),
-  datasets: [{ label: "Ventas", data: await sales() }],
+  datasets: { label: "Ventas diarias", data: await sales() },
 };

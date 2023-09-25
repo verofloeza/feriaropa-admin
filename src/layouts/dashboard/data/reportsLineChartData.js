@@ -12,13 +12,24 @@ const salesLastMonth = async () => {
     const startOfMonth = new Date(currentYear, month, 1);
     const endOfMonth = new Date(currentYear, month + 1, 0);
 
-    const ordersSnapshot = await getDocs(
-      query(collection(db, "orders"), where("date", ">=", startOfMonth), where("date", "<=", endOfMonth))
-    );
+    const formattedStartOfMonth = startOfMonth.toString(); // Convierte a formato de cadena
+    const formattedEndOfMonth = endOfMonth.toString(); // Convierte a formato de cadena
 
-    sales.push(ordersSnapshot.size);
+    try {
+      const ordersSnapshot = await getDocs(
+        query(
+          collection(db, "orders"),
+          where("date", ">=", formattedStartOfMonth),
+          where("date", "<=", formattedEndOfMonth)
+        )
+      );
+      sales.push(ordersSnapshot.size);
+    } catch (error) {
+      console.error("Error al obtener los datos:", error);
+    }
+  
   }
-
+  console.log(sales)
   return sales;
 };
 
@@ -31,12 +42,13 @@ const getPastYearMonths = (numMonths) => {
     const monthName = monthDate.toLocaleDateString('es-ES', { month: 'short' });
     months.unshift(monthName);
   }
+  
   return months;
 };
 
 export default {
   ventas: {
     labels: getPastYearMonths(12),
-    datasets: { label: "Mobile apps", data: salesLastMonth() },
+    datasets: { label: "Ventas Mensuales", data: await salesLastMonth() },
   }
 };

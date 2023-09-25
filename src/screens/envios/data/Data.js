@@ -42,7 +42,6 @@ export default function Data(handleOpen, render, setRender ){
         console.error("Error al editar el usuario a Firestore:", e);
       }
     }
-    console.log(users)
     let rows = [];
     if (users) {
       

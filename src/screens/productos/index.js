@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Icon, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 
@@ -9,15 +9,32 @@ import Grid from "@mui/material/Grid";
 import MDAvatar from 'components/MDAvatar';
 import MDBadge from 'components/MDBadge';
 import MDBox from 'components/MDBox'
+import MDButton from 'components/MDButton';
 import MDTypography from 'components/MDTypography'
 import { auth } from 'contants/Firebase';
 import { db } from 'contants/Firebase';
 import { useNavigate } from 'react-router-dom';
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+
 const Productos = () => {
     const history = useNavigate()
     const [ render, setRender ] = useState(true);
     const [ rows, setRows ] = useState(null);
+    const [ open, setOpen ] = useState(false);
+    const [ datos, setDatos ] = useState(null);
 
     useEffect(()=>{
       const usersList = async () =>{
@@ -104,6 +121,27 @@ const Productos = () => {
       }
     }
 
+    const handleOpen = async (id) => {
+      obtenerDatos(id)
+      setOpen(true);
+    };
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const obtenerDatos = async (id) => {
+       const docRef = doc(db, "products", id);
+       try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setDatos(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error getting document:', error);
+      }
+    }
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -140,6 +178,7 @@ const Productos = () => {
                                   <TableCell>Email</TableCell>
                                   <TableCell>Precio</TableCell>
                                   <TableCell>Estado</TableCell>
+                                  <TableCell>Accion</TableCell>
                                 </TableRow>
                                 {
                                  
@@ -176,6 +215,11 @@ const Productos = () => {
                                                     </MDBox>
                                                     }
                                       </TableCell>
+                                      <TableCell>
+                                        <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium" onClick={() => handleOpen(row.id)}>
+                                          <Icon sx={{ fontSize: 30 }}>remove_red_eye</Icon>&nbsp;Ver
+                                        </MDTypography>
+                                      </TableCell>
                                   </TableRow>
                                 ))
                                 
@@ -202,6 +246,29 @@ const Productos = () => {
           </Grid>
         </Grid>
       </MDBox>  
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <MDBox sx={{ ...style }}>
+          <h2 id="child-modal-title">Ver Producto</h2>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox component="form" role="form">
+              
+              
+              <MDBox mt={4} mb={1}>
+                <MDButton variant="outlined" color="secondary" size="small" onClick={handleClose} style={{left:5}}>
+                  Cerrar
+                </MDButton>
+              </MDBox>
+              
+            </MDBox>
+          </MDBox>
+          
+        </MDBox>
+      </Modal>
     </DashboardLayout>
   )
 }
