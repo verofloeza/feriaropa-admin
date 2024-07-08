@@ -97,9 +97,7 @@ const Administradores = () => {
      
       
     }
-
-    const addUser = async () =>{
-
+    const addUser = async () => {
       const userRef = doc(db, "users", email);
       const user = {
         name: name,
@@ -108,30 +106,25 @@ const Administradores = () => {
         role: 'admin',
         createdAt: new Date()
       };
+      
       try {
+        // Crear la autenticación del usuario primero
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        const authenticatedUser = userCredential.user;
+        console.log('Usuario autenticado:', authenticatedUser);
+    
+        // Añadir el usuario a Firestore
         await setDoc(userRef, user);
-
-        createUserWithEmailAndPassword(auth, email, pass)
-        .then((userCredential) => {
-          // Autenticación exitosa
-          const user = userCredential.user;
-          console.log('Usuario autenticado:', user);
-          setear()
-          setRender(true)
-          handleCloseNew()
-        })
-        .catch((error) => {
-          // Error en la creación de la autenticación
-          console.error('Error en la creación de la autenticación:', error);
-        });
-
-        
-
-      } catch (e) {
-        console.error("Error al editar el usuario a Firestore:", e);
+        console.log("Usuario añadido a Firestore");
+    
+        // Realizar las acciones adicionales
+        setear();
+        setRender(true);
+        handleCloseNew();
+      } catch (error) {
+        console.error("Error en el proceso de autenticación o adición a Firestore:", error);
       }
-    }
-
+    };
 
     const setear = () =>{
       setName(null)
